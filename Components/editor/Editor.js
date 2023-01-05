@@ -27,10 +27,12 @@ export default function Editor(){
         applyEdit(event){
             const currentMarkdown = markdown;
             const selection = window.getSelection();
-            const selectedText = selection.toString().trim();
+            const selectedTextRaw = selection.toString();
+            const selectedText = selectedTextRaw.trim();
 
             const operation = event.currentTarget.name;
             console.log(operation);
+            // console.log(selection)
 
             let startMarker = '';
             let endMarker = '';
@@ -50,28 +52,52 @@ export default function Editor(){
             }
 
             if(selectedText !== ""){
-            const start = selection.anchorOffset;
-            const end = selection.focusOffset - 1;
+                const start = selection.anchorOffset;
+                const end = selection.focusOffset - 1;
 
-            const selectionStart = selectedText.substring(0, 1);
-            const selectionEnd = selectedText.substring(selectedText.length - 1);
+                const selectionStart = selectedText.substring(0, 2);
+                const selectionEnd = selectedText.substring(selectedText.length - 2);
 
-            if (selectionStart === startMarker && selectionEnd === endMarker){
-                alert(`Text is already ${operation}`);
-                return;
-            }
+                const boldText = startMarker + selectedText + endMarker;
+            
+                const str = currentMarkdown;
+                const str1 = str.substring(0, start);
+                const str2 = str.substring(end + 1);
 
-            const boldText = startMarker + selectedText + endMarker;
-           
-            const str = currentMarkdown;
-            const str1 = str.substring(0, start);
-            const str2 = str.substring(end + 1);
-           
-            const newMarkdown = str1 + " " + boldText + " " + str2;
-            setMarkDown(newMarkdown);
-            console.log(newMarkdown);
+                const spaceBeforeSelection = selectedTextRaw[0] === ' ' ? ' ' : '';
+                const spaceAfterSelection = selectedTextRaw[selectedTextRaw.length - 1] === ' '? ' ' : '';
+
+                let newMarkdown = '';
+
+                if (selectionStart === startMarker && selectionEnd === endMarker){
+                    // alert(`Text is already ${operation}`);
+                    console.log(selectionStart);
+                    console.log(selectionEnd);
+
+                    const unboldText = selectedText.replaceAll(startMarker, '');
+                    console.log(unboldText);
+                    newMarkdown = str1 + spaceBeforeSelection + unboldText.trim() + spaceAfterSelection + str2;
+                }
+                else{ 
+
+                // const boldText = startMarker + selectedText + endMarker;
+            
+                // const str = currentMarkdown;
+                // const str1 = str.substring(0, start);
+                // const str2 = str.substring(end + 1);
+
+                // const spaceBeforeSelection = selectedTextRaw[0] === ' ' ? ' ': '';
+                // const spaceAfterSelection = selectedTextRaw[selectedTextRaw - 1] === ' '? ' ' : '';
+                // console.log(str1[str1.length - 1])
+            
+                newMarkdown = str1 + spaceBeforeSelection + boldText + spaceAfterSelection + str2;
+                console.log(newMarkdown);
+                }
+
+                setMarkDown(newMarkdown);
             }
             else{
+                // alert(`Select something to make ${operation}`)
                 return markdown;
             }
         },
@@ -82,26 +108,26 @@ export default function Editor(){
             const selectedText = selection.toString().trim();
 
             if(selectedText !== ""){
-            const start = selection.anchorOffset;
-            const end = selection.focusOffset - 1;
+                const start = selection.anchorOffset;
+                const end = selection.focusOffset - 1;
 
-            const selectionStart = selectedText.substring(0, 2);
-            const selectionEnd = selectedText.substring(selectedText.length - 2);
+                const selectionStart = selectedText.substring(0, 2);
+                const selectionEnd = selectedText.substring(selectedText.length - 2);
 
-            if (selectionStart === "**" && selectionEnd === "**"){
-                console.log('text is already bold');
-                return;
-            }
+                if (selectionStart === "**" && selectionEnd === "**"){
+                    console.log('text is already bold');
+                    return;
+                }
 
-            const boldText = '**'+ selectedText +'**';
-           
-            const str = currentMarkdown;
-            const str1 = str.substring(0, start);
-            const str2 = str.substring(end + 1);
-           
-            const newMarkdown = str1 + " " + boldText + " " + str2;
-            setMarkDown(newMarkdown);
-            console.log(newMarkdown);
+                const boldText = '**'+ selectedText +'**';
+            
+                const str = currentMarkdown;
+                const str1 = str.substring(0, start);
+                const str2 = str.substring(end + 1);
+            
+                const newMarkdown = str1 + " " + boldText + " " + str2;
+                setMarkDown(newMarkdown);
+                console.log(newMarkdown);
             }
             else{
                 return markdown;
