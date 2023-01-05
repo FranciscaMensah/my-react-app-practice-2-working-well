@@ -20,12 +20,14 @@ export default function EditorTools (props){
                         <BiHighlight size='17'/>
                 </button>
                 <button
-                    onClick={props.edit.makeMeBold}
+                    name='bold'
+                    onClick={props.edit.applyEdit}
                     className='btn-tool padding'>
                         <FaBold size='15'/>
                 </button>
                 <button
-                onClick={props.edit.makeItalic}
+                    name='italic'
+                    onClick={props.edit.applyEdit}
                     className='btn-tool padding'>
                         <FaItalic size='15'/>
                 </button>

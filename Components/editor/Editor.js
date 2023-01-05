@@ -7,7 +7,7 @@ import Preview from '../preview/Preview';
 
 export default function Editor(){
     const [isPreview, setIsPreview] = React.useState(false);
-    const [markdown, setMarkDown] = React.useState('Type here');
+    const [markdown, setMarkDown] = React.useState('To the farm we go');
 
     function handleChange (event){
         const html = event.target.value;
@@ -24,56 +24,109 @@ export default function Editor(){
     }
 
     const edit = {
-        makeBold(){
-            const selectedText = functions.getSelectedText();
+        applyEdit(event){
             const currentMarkdown = markdown;
-            console.log(currentMarkdown)
-            const boldText = '**'+ selectedText +'**';
-            const newMarkdown = currentMarkdown.replace(selectedText, boldText);
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+
+            const operation = event.currentTarget.name;
+            console.log(operation);
+
+            let startMarker = '';
+            let endMarker = '';
+
+            switch (operation){
+                case 'bold':
+                    startMarker = '**';
+                    endMarker = '**';
+                    break;
+                case 'italic':
+                    startMarker = '_';
+                    endMarker = '_';
+                    break;
+                default:
+                    startMarker = '';
+                    endMarker = '';
+            }
+
+            if(selectedText !== ""){
+            const start = selection.anchorOffset;
+            const end = selection.focusOffset - 1;
+
+            const selectionStart = selectedText.substring(0, 1);
+            const selectionEnd = selectedText.substring(selectedText.length - 1);
+
+            if (selectionStart === startMarker && selectionEnd === endMarker){
+                alert(`Text is already ${operation}`);
+                return;
+            }
+
+            const boldText = startMarker + selectedText + endMarker;
+           
+            const str = currentMarkdown;
+            const str1 = str.substring(0, start);
+            const str2 = str.substring(end + 1);
+           
+            const newMarkdown = str1 + " " + boldText + " " + str2;
             setMarkDown(newMarkdown);
-            console.log(boldText);
+            console.log(newMarkdown);
+            }
+            else{
+                return markdown;
+            }
+        },
+
+        makeBold(){
+            const currentMarkdown = markdown;
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+
+            if(selectedText !== ""){
+            const start = selection.anchorOffset;
+            const end = selection.focusOffset - 1;
+
+            const selectionStart = selectedText.substring(0, 2);
+            const selectionEnd = selectedText.substring(selectedText.length - 2);
+
+            if (selectionStart === "**" && selectionEnd === "**"){
+                console.log('text is already bold');
+                return;
+            }
+
+            const boldText = '**'+ selectedText +'**';
+           
+            const str = currentMarkdown;
+            const str1 = str.substring(0, start);
+            const str2 = str.substring(end + 1);
+           
+            const newMarkdown = str1 + " " + boldText + " " + str2;
+            setMarkDown(newMarkdown);
+            console.log(newMarkdown);
+            }
+            else{
+                return markdown;
+            }
         },
 
         makeItalic(){
-            // const selectedText = functions.getSelectedText();
             const currentMarkdown = markdown;
-            console.log(currentMarkdown)
-            // const italicText = '_'+ selectedText +'_';
-            // const newMarkdown = currentMarkdown.replace(selectedText, italicText);
-            const newMarkdown = currentMarkdown.replace(window.getSelection(), `_${window.getSelection()}_`)
-            setMarkDown(newMarkdown);
-            // console.log(italicText);
-            console.log(newMarkdown);
-        },
-
-        makeMeBold(){
-            const currentMarkdown = markdown;
-            console.log(currentMarkdown);
             const selection = window.getSelection();
             const selectedText = selection.toString();
+           
+            if(selectedText !== ""){
             const start = selection.anchorOffset;
             const end = selection.focusOffset - 1;
-            console.log(currentMarkdown[start]);
-            console.log(currentMarkdown[end]);
 
-            const boldText = ' **'+ selectedText.trim() +'** ';
-            // const updatedMarkdown = currentMarkdown;
-            // const updatedMarkdown = currentMarkdown.slice(start, bold)
-            // const updatedMarkdown = currentMarkdown.slice(start, selectedText.length, boldText);
-            // console.log(updatedMarkdown);
-
+            const italicText = '*'+ selectedText.trim() +'*';
+           
             const str = currentMarkdown;
             const str1 = str.substring(0, start).trim();
             const str2 = str.substring(end + 1).trim()
-            // const str2 = end + 1 !== null? str.substring(end + 1) : str.substring(end);
-            console.log(str1)
-            console.log(str2)
-
-            const newString = str1 + boldText + str2;
-            console.log(newString)
-            setMarkDown(newString);
-            console.log(markdown);
-        }
+           
+            const newMarkdown = str1 + italicText + str2;
+            setMarkDown(newMarkdown);
+            }
+        },
     };
 
     return (
